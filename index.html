@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Goat & Cheese</title>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+ <div class="page-wrapper">
+
+  <header class="hero">
+    <header class="hero">
+
+  <div class="overlay"></div>
+
+  <img src="assets/logo.png" alt="Logo Goat & Cheese" class="logo" />
+
+  <div class="hero-content">
+    <h1>Goat & Cheese</h1>
+
+    <p class="subtitle">
+      Smash burgers artesanales en Boedo 🍔
+    </p>
+
+    <div class="status" id="store-status">
+      Consultando estado...
+    </div>
+
+    <a href="#menu" class="main-button">
+      Ver menú
+    </a>
+  </div>
+
+  </header>
+
+  <main>
+    <section class="info-card">
+      <h2>📍 Retiro o envío</h2>
+      <p>Retiro por Tarija 4002, Boedo, CABA.</p>
+      <p>Envío dentro de zona: $2.000</p>
+    </section>
+
+    <section id="menu" class="menu-section">
+      <h2>Menú</h2>
+      <div id="products-container"></div>
+    </section>
+
+    <section class="cart-section" id="cart-section">
+      <h2>Tu pedido</h2>
+      <div id="cart-container">
+        <p class="empty-cart">Todavía no agregaste productos.</p>
+      </div>
+
+      <div class="total">
+        Total: $<span id="total-price">0</span>
+      </div>
+    </section>
+
+    <section class="closed-warning" id="closed-warning">
+      🔴 En este momento estamos cerrados. Podés ver el menú y armar tu pedido, pero solo se puede confirmar viernes y sábados de 20 a 23 hs.
+    </section>
+
+    <section class="order-section">
+      <h2>Datos del pedido</h2>
+
+      <label>Nombre</label>
+      <input type="text" id="customer-name" placeholder="Ej: Germán" />
+
+      <label>Teléfono</label>
+      <input type="tel" id="customer-phone" placeholder="Ej: 11 1234-5678" />
+
+      <label>Modalidad</label>
+      <select id="delivery-type">
+        <option value="Retiro por local">Retiro por local</option>
+        <option value="Envío a domicilio">Envío a domicilio</option>
+      </select>
+
+      <label>Dirección</label>
+      <input type="text" id="customer-address" placeholder="Solo si es envío" />
+
+      <label>Medio de pago</label>
+      <select id="payment-method">
+        <option value="Efectivo">Efectivo</option>
+        <option value="Transferencia">Transferencia</option>
+      </select>
+
+      <label>Comentarios</label>
+      <textarea id="comments" placeholder="Ej: sin cebolla, con extra cheddar..."></textarea>
+
+      <button id="generate-order" class="main-button">
+        Generar pedido
+      </button>
+
+      <div class="order-ticket" id="order-ticket">
+  	Tu pedido aparecerá acá una vez confirmado.
+      </div>
+
+      <textarea id="order-message" readonly hidden></textarea>
+
+      <a 
+        href="#"
+        target="_blank"
+        class="instagram-button"
+        id="whatsapp-button"
+      >
+        Enviar pedido al local
+      </a>
+    </section>
+    </main>
+
+    <div class="sticky-cart" id="sticky-cart">
+      <div>
+        <strong id="sticky-count">0 productos</strong>
+        <span id="sticky-total">$0</span>
+      </div>
+
+      <a href="#cart-section">Ver pedido</a>
+    </div>
+
+    <footer>
+    <p>Goat & Cheese - Boedo, CABA</p>
+    </footer>
+
+ </div>
+  <script src="script.js"></script>
+</body>
+</html>
