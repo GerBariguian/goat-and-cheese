@@ -1,3 +1,16 @@
+const SUPABASE_URL =
+  "https://hhrvynshqnzobbfslags.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_fBBxDtAePY7hkZWBDD_8gg_YOsR7ihh";
+
+const supabaseClient =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
 const testMode = true;
 
 const products = [
@@ -5,31 +18,37 @@ const products = [
     name: "CHEESEBURGER",
     description: "Queso cheddar",
     simplePrice: 13000,
-    doublePrice: 16500
+    doublePrice: 16500,
+    image: "assets/burger-1.png"
   },
   {
     name: "TERNERITA",
     description: "Cheddar, lechuga, tomate, cebolla, salsa goat",
     simplePrice: 14000,
-    doublePrice: 18000
+    doublePrice: 18000,
+    image: "assets/burger-2.png"
   },
   {
     name: "CUERNITO",
     description: "Cheddar, cebolla, bacon, mostaza, ketchup",
     simplePrice: 14000,
-    doublePrice: 18000
+    doublePrice: 18000,
+    image: "assets/burger-3.png"
   },
   {
     name: "CAPRICHOSA",
     description: "Cheddar, mermelada de bacon, barbacoa",
     simplePrice: 15000,
-    doublePrice: 19000
+    doublePrice: 19000,
+    image: "assets/burger-1.png"
   },
   {
     name: "GOAT DEL MES",
     description: "Cheddar, sweet bacon, salsa sweet",
     simplePrice: 15000,
-    doublePrice: 19000
+    doublePrice: 19000,
+    image: "assets/hero-burger.png",
+    badge: "GOAT DEL MES"
   }
 ];
 
@@ -38,6 +57,12 @@ const cart = [];
 const productsContainer = document.getElementById("products-container");
 const cartContainer = document.getElementById("cart-container");
 const totalPriceElement = document.getElementById("total-price");
+const toast = document.getElementById("toast");
+const deliveryTypeSelect =
+  document.getElementById("delivery-type");
+
+const addressGroup =
+  document.getElementById("address-group");
 
 function renderProducts() {
 
@@ -47,6 +72,10 @@ function renderProducts() {
     productCard.classList.add("product-card");
 
     productCard.innerHTML = `
+      <div class="product-image-wrapper">
+        <img src="${product.image}" alt="${product.name}" class="product-image">
+        ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ""}
+      </div>
       <h3>${product.name}</h3>
 
       <p class="product-description">
@@ -152,11 +181,25 @@ function addToCart(name, type, price) {
   }
 
   renderCart();
+  showToast("✅ Producto agregado");
 }
 
 function removeFromCart(index) {
   cart.splice(index, 1);
   renderCart();
+}
+
+
+function showToast(message) {
+
+  toast.textContent = message;
+
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2000);
+
 }
 
 
@@ -191,7 +234,7 @@ function renderCart() {
     `;
 
     totalPriceElement.textContent = "0";
-    stickyCart.style.display = "none";
+    stickyCart.style.display = "flex";
     return;
   }
 
@@ -247,6 +290,13 @@ function generateOrder() {
   const customerPhone = document.getElementById("customer-phone").value;
   const deliveryType = document.getElementById("delivery-type").value;
   const customerAddress = document.getElementById("customer-address").value;
+  const allowedZones = [
+    "boedo",
+    "caballito",
+    "parque chacabuco",
+    "almagro",
+    "flores"
+];
   const paymentMethod = document.getElementById("payment-method").value;
   const comments = document.getElementById("comments").value;
 
@@ -255,10 +305,25 @@ function generateOrder() {
     return;
   }
 
-  if (deliveryType === "Envío a domicilio" && !customerAddress) {
-    alert("Completá la dirección para el envío.");
+  if (deliveryType === "Envío a domicilio") {
+
+    if (!customerAddress) {
+      alert("Completá la dirección para el envío.");
+      return;
+  }
+
+  const addressLower = customerAddress.toLowerCase();
+
+  const insideZone = allowedZones.some(zone =>
+    addressLower.includes(zone)
+  );
+
+  if (!insideZone) {
+    alert("⚠️ Por el momento no llegamos a esa zona.");
     return;
   }
+
+}
 
   const orderNumber = Math.floor(1000 + Math.random() * 9000);
 
@@ -305,57 +370,61 @@ El local se comunicará para confirmar el pedido y el estado de la compra.`;
   document.getElementById("order-message").value = message;
 
   const ticketHTML = `
-    <div class="ticket-title">
-      Pedido #${orderNumber} ✅
-    </div>
+  <div class="ticket-title">
+    Pedido #${orderNumber} ✅
+  </div>
 
-    <div class="ticket-status">
-      Pendiente de confirmación del local
-    </div>
+  <div class="ticket-status">
+    Pendiente de confirmación
+  </div>
 
-    <div class="ticket-divider"></div>
+  <div class="ticket-divider"></div>
 
-    <strong>Detalle:</strong><br><br>
+  <strong>🛒 Pedido</strong><br>
 
-    ${orderDetail.replace(/\n/g, "<br>")}
+  ${orderDetail.replace(/\n/g, "<br>")}
 
-    <div class="ticket-divider"></div>
+  <div class="ticket-divider"></div>
 
-    <strong>Subtotal:</strong> $${subtotal.toLocaleString("es-AR")}<br>
-    <strong>Envío:</strong> $${shippingCost.toLocaleString("es-AR")}
+  <div>
+    Subtotal: $${subtotal.toLocaleString("es-AR")}
+  </div>
 
-    <div class="ticket-total">
-      Total: $${total.toLocaleString("es-AR")}
-    </div>
+  <div>
+    Envío: $${shippingCost.toLocaleString("es-AR")}
+  </div>
 
-    <div class="ticket-divider"></div>
+  <div class="ticket-total">
+    Total $${total.toLocaleString("es-AR")}
+  </div>
 
-    <strong>Cliente:</strong><br>
-    ${customerName}<br>
-    ${customerPhone}
+  <div class="ticket-divider"></div>
 
-    <br><br>
+  <strong>👤 ${customerName}</strong><br>
+  📱 ${customerPhone}<br>
+  🚚 ${deliveryType}
 
-    <strong>Modalidad:</strong><br>
-    ${deliveryType}
+  ${deliveryType === "Envío a domicilio"
+    ? `<br>📍 ${customerAddress}`
+    : ""
+  }
 
-    ${deliveryType === "Envío a domicilio"
-      ? `<br><br><strong>Dirección:</strong><br>${customerAddress}`
-      : ""
-    }
+  <br>
+  💳 ${paymentMethod}
 
-    <br><br>
-
-    <strong>Pago:</strong><br>
-    ${paymentMethod}
-
-    <br><br>
-
-    <strong>Comentarios:</strong><br>
-    ${comments || "Sin comentarios"}
-  `;
+  ${comments
+    ? `<br>📝 ${comments}`
+    : ""
+  }
+`;
 
   document.getElementById("order-ticket").innerHTML = ticketHTML;
+
+  document.getElementById("success-section").style.display = "block";
+
+  document
+    .getElementById("success-section")
+    .scrollIntoView({ behavior: "smooth" });
 
   const whatsappMessage = encodeURIComponent(message);
 
@@ -368,8 +437,51 @@ El local se comunicará para confirmar el pedido y el estado de la compra.`;
     .getElementById("whatsapp-button")
     .href = whatsappURL;
 
+  supabaseClient
+    .from("orders")
+    .insert([
+      { 
+        customer_name: customerName,
+        customer_phone: customerPhone,
+        delivery_type: deliveryType,
+        customer_address: customerAddress,
+        payment_method: paymentMethod,
+        comments: comments,
+        order_detail: orderDetail,
+        total: total,
+        status: "Recibido"
+      }
+    ])
+    .then(({ error }) => {
+
+      if (error) {
+        console.error(error);
+
+        alert(
+          "Error guardando pedido:\n\n" +
+          error.message
+         );
+      } else {
+        console.log("Pedido guardado en Supabase ✅");
+      }
+
+    });
+
   document.getElementById("generate-order").textContent = "Pedido confirmado ✅";
   document.getElementById("generate-order").disabled = true;
+}
+
+function toggleAddressField() {
+
+  const deliveryType =
+    deliveryTypeSelect.value;
+
+  if (deliveryType === "Envío a domicilio") {
+    addressGroup.style.display = "block";
+  } else {
+    addressGroup.style.display = "none";
+  }
+
 }
 
 function checkStoreStatus() {
@@ -407,6 +519,64 @@ function checkStoreStatus() {
     warningElement.style.display = "block";
     orderSection.classList.add("disabled");
   }
+}
+
+  document.getElementById("go-to-cart").addEventListener("click", () => {
+    document
+      .getElementById("cart-section")
+      .scrollIntoView({ behavior: "smooth" });
+});
+
+
+document
+  .getElementById("new-order-button")
+  .addEventListener("click", resetOrder);
+
+deliveryTypeSelect.addEventListener(
+  "change",
+  toggleAddressField
+);
+
+toggleAddressField();
+
+function resetOrder() {
+
+  cart.length = 0;
+
+  renderCart();
+
+  document.getElementById("sticky-cart").style.display = "none";
+
+  document.getElementById("customer-name").value = "";
+  document.getElementById("customer-phone").value = "";
+  document.getElementById("customer-address").value = "";
+  document.getElementById("comments").value = "";
+
+  document.getElementById("delivery-type").value =
+    "Retiro por local";
+
+  document.getElementById("payment-method").value =
+    "Efectivo";
+
+  toggleAddressField();
+
+  document.getElementById("order-ticket").innerHTML =
+    "Tu pedido aparecerá acá una vez confirmado.";
+
+  document.getElementById("success-section").style.display =
+    "none";
+
+  const generateButton =
+    document.getElementById("generate-order");
+
+  generateButton.textContent = "Generar pedido";
+  generateButton.disabled = false;
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
 }
 
 checkStoreStatus();
