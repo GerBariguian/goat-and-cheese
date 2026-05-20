@@ -11,7 +11,7 @@ const supabaseClient =
   );
 
 
-const testMode = false;
+const testMode = true;
 
 const products = [
   {
