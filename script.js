@@ -275,6 +275,82 @@ function renderCart() {
   stickyCart.style.display = "flex";
 }
 
+const customerNameInput =
+  document.getElementById("customer-name");
+
+customerNameInput.addEventListener("input", () => {
+
+  customerNameInput.value =
+    customerNameInput.value.replace(
+      /[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g,
+      ""
+    );
+
+});
+
+customerNameInput.addEventListener("blur", () => {
+
+  validateField(
+    customerNameInput,
+    customerNameInput.value.trim().length >= 3
+  );
+
+});
+
+const customerPhoneInput =
+  document.getElementById("customer-phone");
+
+customerPhoneInput.addEventListener("input", () => {
+
+  let numbersOnly =
+    customerPhoneInput.value.replace(/[^0-9]/g, "");
+
+  if (numbersOnly.length > 10) {
+    numbersOnly = numbersOnly.slice(0, 10);
+  }
+
+  if (numbersOnly.length > 6) {
+    customerPhoneInput.value =
+      `${numbersOnly.slice(0, 2)} ${numbersOnly.slice(2, 6)}-${numbersOnly.slice(6)}`;
+  } else if (numbersOnly.length > 2) {
+    customerPhoneInput.value =
+      `${numbersOnly.slice(0, 2)} ${numbersOnly.slice(2)}`;
+  } else {
+    customerPhoneInput.value = numbersOnly;
+  }
+
+});
+
+customerPhoneInput.addEventListener("blur", () => {
+
+  const numbersOnly =
+    customerPhoneInput.value.replace(/[^0-9]/g, "");
+
+  validateField(
+    customerPhoneInput,
+    numbersOnly.length === 10
+  );
+
+});
+
+function validateField(input, isValid) {
+
+  input.classList.remove(
+    "valid-input",
+    "invalid-input"
+  );
+
+  if (input.value.trim() === "") {
+    return;
+  }
+
+  if (isValid) {
+    input.classList.add("valid-input");
+  } else {
+    input.classList.add("invalid-input");
+  }
+
+}
 
 document
   .getElementById("generate-order")
@@ -300,8 +376,18 @@ function generateOrder() {
   const paymentMethod = document.getElementById("payment-method").value;
   const comments = document.getElementById("comments").value;
 
-  if (!customerName || !customerPhone) {
-    alert("Completá tu nombre y teléfono para confirmar el pedido.");
+  const phoneNumbersOnly =
+    customerPhone.replace(/[^0-9]/g, "");
+
+  if (customerName.trim().length < 3) {
+    validateField(customerNameInput, false);
+    alert("El nombre debe tener al menos 3 letras.");
+    return;
+  }
+
+  if (phoneNumbersOnly.length !== 10) {
+    validateField(customerPhoneInput, false);
+    alert("El teléfono debe tener 10 números.");
     return;
   }
 
@@ -339,6 +425,10 @@ function generateOrder() {
 
   const shippingCost = deliveryType === "Envío a domicilio" ? 2000 : 0;
   const total = subtotal + shippingCost;
+  const estimatedTime =
+  deliveryType === "Envío a domicilio"
+    ? "35-45 min"
+    : "15-20 min";
 
   let message =
 `✅ Pedido #${orderNumber} confirmado
@@ -403,6 +493,8 @@ El local se comunicará para confirmar el pedido y el estado de la compra.`;
   <strong>👤 ${customerName}</strong><br>
   📱 ${customerPhone}<br>
   🚚 ${deliveryType}
+  <br>
+  ⏱️ Demora estimada: ${estimatedTime}
 
   ${deliveryType === "Envío a domicilio"
     ? `<br>📍 ${customerAddress}`
@@ -449,6 +541,7 @@ supabaseClient
       comments: comments,
       order_detail: orderDetail,
       total: total,
+      estimated_time: estimatedTime,
       status: "Recibido"
     }
   ])

@@ -17,11 +17,38 @@
       <img src="assets/logo.png" alt="Goat & Cheese" class="admin-logo" />
       <h1>Panel de pedidos</h1>
       <p>Goat & Cheese</p>
+      <button id="logout-button" class="logout-button" style="display: none;">
+        Cerrar sesión
+      </button>
     </header>
 
     <main>
-      <section class="admin-section">
+      <section class="admin-login" id="admin-login">
+        <h2>Acceso admin</h2>
+        <p>Ingresá el PIN para ver los pedidos.</p>
+
+        <input 
+          type="password" 
+          id="admin-pin" 
+          placeholder="PIN de acceso"
+        />
+
+        <button id="admin-login-button" class="main-button">
+          Ingresar
+        </button>
+
+        <p id="admin-error" class="admin-error"></p>
+      </section>
+      <section class="admin-section" id="admin-panel" style="display: none;">
         <h2>Pedidos recibidos</h2>
+        
+        <div class="admin-filters">
+          <button onclick="setFilter('Todos')">Todos</button>
+          <button onclick="setFilter('Recibido')">Recibido</button>
+          <button onclick="setFilter('En preparación')">Preparando</button>
+          <button onclick="setFilter('Listo')">Listo</button>
+          <button onclick="setFilter('Entregado')">Entregado</button>
+        </div>
 
         <div id="orders-container">
           <p>Cargando pedidos...</p>
@@ -29,6 +56,10 @@
       </section>
     </main>
 
+  </div>
+
+  <div class="admin-toast" id="admin-toast">
+    🔥 Nuevo pedido recibido
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>

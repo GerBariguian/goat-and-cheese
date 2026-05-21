@@ -13,13 +13,6 @@ const container =
 const params = new URLSearchParams(window.location.search);
 const orderId = params.get("id");
 
-function getStatusEmoji(status) {
-  if (status === "Recibido") return "🟡";
-  if (status === "En preparación") return "🟠";
-  if (status === "Listo") return "🟢";
-  return "⚪";
-}
-
 async function loadOrder() {
   if (!orderId) {
     container.innerHTML =
@@ -46,9 +39,57 @@ async function loadOrder() {
         Pedido #${data.id}
       </div>
 
-      <div class="ticket-status">
-        ${getStatusEmoji(data.status)} ${data.status}
-      </div>
+      <div class="order-progress">
+
+  <div class="progress-step ${
+    data.status === "Recibido" ||
+    data.status === "En preparación" ||
+    data.status === "Listo" ||
+    data.status === "Entregado"
+      ? "active"
+      : ""
+  }">
+    🟡
+    <span>Recibido</span>
+  </div>
+
+  <div class="progress-line"></div>
+
+  <div class="progress-step ${
+    data.status === "En preparación" ||
+    data.status === "Listo" ||
+    data.status === "Entregado"
+      ? "active"
+      : ""
+  }">
+    🟠
+    <span>Preparando</span>
+  </div>
+
+  <div class="progress-line"></div>
+
+  <div class="progress-step ${
+    data.status === "Listo" ||
+    data.status === "Entregado"
+      ? "active"
+      : ""
+  }">
+    🟢
+    <span>Listo</span>
+  </div>
+
+  <div class="progress-line"></div>
+
+  <div class="progress-step ${
+    data.status === "Entregado"
+      ? "active"
+      : ""
+  }">
+    ⚫
+    <span>Entregado</span>
+  </div>
+
+</div>
 
       <div class="ticket-divider"></div>
 
@@ -61,12 +102,25 @@ async function loadOrder() {
         Total $${Number(data.total).toLocaleString("es-AR")}
       </div>
 
+      <div>
+        🕒 ${new Date(data.created_at).toLocaleTimeString(
+          "es-AR",
+          {
+            hour: "2-digit",
+            minute: "2-digit"
+          }
+        )} hs
+      </div>
+
+      <div class="ticket-divider"></div>
+
       <div class="ticket-divider"></div>
 
       <strong>👤 Cliente</strong><br>
       ${data.customer_name}<br>
       📱 ${data.customer_phone}<br>
       🚚 ${data.delivery_type}
+      ⏱️ Demora estimada: ${data.estimated_time || "-"}
     </div>
   `;
 }
