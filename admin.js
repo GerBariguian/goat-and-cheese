@@ -207,10 +207,10 @@ function sendWhatsappToCustomer(orderId, customerName, customerPhone, status, de
       "Tu pedido ya está en preparación 🍔";
   } else if (status === "Listo") {
 
-  if (deliveryType === "Retiro por el local") {
+  if (deliveryType === "Retiro por local") {
 
     statusMessage =
-      "Tu pedido ya está listo para retirar 🟢";
+      "Tu pedido ya está listo, podés pasar a retirarlo. ¡Te esperamos! 🟢";
 
   } else {
 
@@ -236,26 +236,30 @@ function sendWhatsappToCustomer(orderId, customerName, customerPhone, status, de
       `Hola ${customerName},`;
   }
 
-  let trackingSection = "";
+  let extraInfo = "";
 
-  if (status !== "Entregado") {
+  if (status === "Recibido") {
 
-    trackingSection =
-  `Podés seguir el estado en tiempo real acá:
+    extraInfo =
+  `Pedido #${orderId}
+
+  Podés seguir el estado en tiempo real acá:
   ${trackingUrl}`;
 
   }
 
-  const message =
-  `${introMessage}
+  const lines = [
+  introMessage,
+  statusMessage
+];
 
-  ${statusMessage}
+  if (extraInfo) {
+    lines.push("", extraInfo);
+  }
 
-  Pedido #${orderId}
+  lines.push("", "Goat & Cheese");
 
-  ${trackingSection}
-
-  Goat & Cheese`;
+  const message = lines.join("\n");
 
   const whatsappUrl =
     `https://wa.me/54${cleanPhone}?text=${encodeURIComponent(message)}`;
