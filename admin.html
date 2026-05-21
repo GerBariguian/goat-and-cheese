@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Panel Admin - Goat & Cheese</title>
+
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <header class="admin-header">
+      <img src="assets/logo.png" alt="Goat & Cheese" class="admin-logo" />
+      <h1>Panel de pedidos</h1>
+      <p>Goat & Cheese</p>
+    </header>
+
+    <main>
+      <section class="admin-section">
+        <h2>Pedidos recibidos</h2>
+
+        <div id="orders-container">
+          <p>Cargando pedidos...</p>
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

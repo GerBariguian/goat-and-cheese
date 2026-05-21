@@ -437,35 +437,48 @@ El local se comunicará para confirmar el pedido y el estado de la compra.`;
     .getElementById("whatsapp-button")
     .href = whatsappURL;
 
-  supabaseClient
-    .from("orders")
-    .insert([
-      { 
-        customer_name: customerName,
-        customer_phone: customerPhone,
-        delivery_type: deliveryType,
-        customer_address: customerAddress,
-        payment_method: paymentMethod,
-        comments: comments,
-        order_detail: orderDetail,
-        total: total,
-        status: "Recibido"
-      }
-    ])
-    .then(({ error }) => {
+supabaseClient
+  .from("orders")
+  .insert([
+    {
+      customer_name: customerName,
+      customer_phone: customerPhone,
+      delivery_type: deliveryType,
+      customer_address: customerAddress,
+      payment_method: paymentMethod,
+      comments: comments,
+      order_detail: orderDetail,
+      total: total,
+      status: "Recibido"
+    }
+  ])
+  .select()
+  .single()
+  .then(({ data, error }) => {
 
-      if (error) {
-        console.error(error);
+    if (error) {
+      console.error(error);
 
-        alert(
-          "Error guardando pedido:\n\n" +
-          error.message
-         );
-      } else {
-        console.log("Pedido guardado en Supabase ✅");
-      }
+      alert(
+        "Error guardando pedido:\n\n" +
+        error.message
+      );
 
-    });
+      return;
+    }
+
+    console.log("Pedido guardado en Supabase ✅", data);
+
+    const trackingLink =
+      `pedido.html?id=${data.id}`;
+
+    document.getElementById("tracking-link").href =
+      trackingLink;
+
+    document.getElementById("tracking-link").style.display =
+      "block";
+
+  });
 
   document.getElementById("generate-order").textContent = "Pedido confirmado ✅";
   document.getElementById("generate-order").disabled = true;
@@ -528,56 +541,12 @@ function checkStoreStatus() {
 });
 
 
-document
-  .getElementById("new-order-button")
-  .addEventListener("click", resetOrder);
-
 deliveryTypeSelect.addEventListener(
   "change",
   toggleAddressField
 );
 
 toggleAddressField();
-
-function resetOrder() {
-
-  cart.length = 0;
-
-  renderCart();
-
-  document.getElementById("sticky-cart").style.display = "none";
-
-  document.getElementById("customer-name").value = "";
-  document.getElementById("customer-phone").value = "";
-  document.getElementById("customer-address").value = "";
-  document.getElementById("comments").value = "";
-
-  document.getElementById("delivery-type").value =
-    "Retiro por local";
-
-  document.getElementById("payment-method").value =
-    "Efectivo";
-
-  toggleAddressField();
-
-  document.getElementById("order-ticket").innerHTML =
-    "Tu pedido aparecerá acá una vez confirmado.";
-
-  document.getElementById("success-section").style.display =
-    "none";
-
-  const generateButton =
-    document.getElementById("generate-order");
-
-  generateButton.textContent = "Generar pedido";
-  generateButton.disabled = false;
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
-}
 
 checkStoreStatus();
 renderProducts();
