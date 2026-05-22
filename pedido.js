@@ -41,51 +41,55 @@ async function loadOrder() {
 
       <div class="order-progress">
 
-  <div class="progress-step ${
-    data.status === "Recibido" ||
-    data.status === "En preparación" ||
-    data.status === "Listo" ||
-    data.status === "Entregado"
-      ? "active"
-      : ""
-  }">
-    🟡
+  <div class="progress-step">
+    <div class="progress-circle ${
+      data.status === "Recibido" ||
+      data.status === "En preparación" ||
+      data.status === "Listo" ||
+      data.status === "Entregado"
+        ? "circle-active-yellow"
+        : "circle-inactive"
+    }"></div>
+
     <span>Recibido</span>
   </div>
 
   <div class="progress-line"></div>
 
-  <div class="progress-step ${
-    data.status === "En preparación" ||
-    data.status === "Listo" ||
-    data.status === "Entregado"
-      ? "active"
-      : ""
-  }">
-    🟠
+  <div class="progress-step">
+    <div class="progress-circle ${
+      data.status === "En preparación" ||
+      data.status === "Listo" ||
+      data.status === "Entregado"
+        ? "circle-active-orange"
+        : "circle-inactive"
+    }"></div>
+
     <span>Preparando</span>
   </div>
 
   <div class="progress-line"></div>
 
-  <div class="progress-step ${
-    data.status === "Listo" ||
-    data.status === "Entregado"
-      ? "active"
-      : ""
-  }">
-    🟢
+  <div class="progress-step">
+    <div class="progress-circle ${
+      data.status === "Listo" ||
+      data.status === "Entregado"
+        ? "circle-active-green"
+        : "circle-inactive"
+    }"></div>
+
     <span>Listo</span>
   </div>
 
   <div class="progress-line"></div>
 
-  <div class="progress-step ${
-    data.status === "Entregado"
-      ? "active"
-      : ""
-  }">
-    ⚫
+  <div class="progress-step">
+    <div class="progress-circle ${
+      data.status === "Entregado"
+        ? "circle-active-gray"
+        : "circle-inactive"
+    }"></div>
+
     <span>Entregado</span>
   </div>
 
@@ -114,12 +118,12 @@ async function loadOrder() {
 
       <div class="ticket-divider"></div>
 
-      <div class="ticket-divider"></div>
+      <strong>👤 Cliente:</strong> ${data.customer_name}<br>
 
-      <strong>👤 Cliente</strong><br>
-      ${data.customer_name}<br>
       📱 ${data.customer_phone}<br>
-      🚚 ${data.delivery_type}
+
+      🚚 ${data.delivery_type}<br>
+
       ⏱️ Demora estimada: ${data.estimated_time || "-"}
     </div>
   `;

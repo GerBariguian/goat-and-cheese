@@ -19,28 +19,28 @@ const products = [
     description: "Queso cheddar",
     simplePrice: 13000,
     doublePrice: 16500,
-    image: "assets/burger-1.png"
+    image: "assets/cheeseburger.png"
   },
   {
     name: "TERNERITA",
     description: "Cheddar, lechuga, tomate, cebolla, salsa goat",
     simplePrice: 14000,
     doublePrice: 18000,
-    image: "assets/burger-2.png"
+    image: "assets/ternerita.png"
   },
   {
     name: "CUERNITO",
     description: "Cheddar, cebolla, bacon, mostaza, ketchup",
     simplePrice: 14000,
     doublePrice: 18000,
-    image: "assets/burger-3.png"
+    image: "assets/cuernito.png"
   },
   {
     name: "CAPRICHOSA",
     description: "Cheddar, mermelada de bacon, barbacoa",
     simplePrice: 15000,
     doublePrice: 19000,
-    image: "assets/burger-1.png"
+    image: "assets/caprichosa.png"
   },
   {
     name: "GOAT DEL MES",
