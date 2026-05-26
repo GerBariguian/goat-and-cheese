@@ -143,13 +143,14 @@ filteredData.forEach((order) => {
           ⚫ Entregado
         </button>
 
-        <button onclick="sendWhatsappToCustomer(
-                  ${order.id},
-                  '${order.customer_name}',
-                  '${order.customer_phone}',
-                  '${order.status}',
-                  '${order.delivery_type}'
-         )">
+        <button onclick='sendWhatsappToCustomer(
+          ${order.id},
+          ${JSON.stringify(order.customer_name)},
+          ${JSON.stringify(order.customer_phone)},
+          ${JSON.stringify(order.status)},
+          ${JSON.stringify(order.delivery_type)},
+          ${JSON.stringify(order.payment_method)}
+        )'>
           📲 WhatsApp
         </button>
 
@@ -190,7 +191,14 @@ function setFilter(status) {
   loadOrders();
 }
 
-function sendWhatsappToCustomer(orderId, customerName, customerPhone, status, deliveryType) {
+function sendWhatsappToCustomer(
+  orderId,
+  customerName,
+  customerPhone,
+  status,
+  deliveryType,
+  paymentMethod
+) {
   const cleanPhone =
     customerPhone.replace(/[^0-9]/g, "");
 
@@ -206,18 +214,13 @@ function sendWhatsappToCustomer(orderId, customerName, customerPhone, status, de
     statusMessage =
       "Tu pedido ya está en preparación 🍔";
   } else if (status === "Listo") {
-
-  if (deliveryType === "Retiro por local") {
-
-    statusMessage =
-      "Tu pedido ya está listo, podés pasar a retirarlo. ¡Te esperamos! 🟢";
-
-  } else {
-
-    statusMessage =
-      "Tu pedido ya está listo y será enviado en breve 🛵";
-
-  }
+    if (deliveryType === "Retiro por local") {
+      statusMessage =
+        "Tu pedido ya está listo, podés pasar a retirarlo. ¡Te esperamos! 🟢";
+    } else {
+      statusMessage =
+        "Tu pedido ya está listo y será enviado en breve 🛵";
+    }
   } else if (status === "Entregado") {
     statusMessage =
       "Tu pedido fue entregado. ¡Gracias por elegirnos! 🙌";
@@ -226,35 +229,32 @@ function sendWhatsappToCustomer(orderId, customerName, customerPhone, status, de
       `El estado actual de tu pedido es: ${status}`;
   }
 
-  let introMessage = "";
-
-  if (status === "Recibido") {
-    introMessage =
-      `Hola ${customerName}!`;
-  } else {
-    introMessage =
-      `Hola ${customerName},`;
-  }
-
-  let extraInfo = "";
-
-  if (status === "Recibido") {
-
-    extraInfo =
-  `Pedido #${orderId}
-
-  Podés seguir el estado en tiempo real acá:
-  ${trackingUrl}`;
-
-  }
+  const introMessage =
+    status === "Recibido"
+      ? `Hola ${customerName}!`
+      : `Hola ${customerName},`;
 
   const lines = [
-  introMessage,
-  statusMessage
-];
+    introMessage,
+    statusMessage
+  ];
 
-  if (extraInfo) {
-    lines.push("", extraInfo);
+  if (status === "Recibido") {
+    lines.push(
+      "",
+      `Pedido #${orderId}`,
+      "",
+      "Podés seguir el estado en tiempo real acá:",
+      trackingUrl
+    );
+
+    if (paymentMethod === "Transferencia") {
+      lines.push(
+        "",
+        "Alias: goatandcheese",
+        "Enviar comprobante por favor 🙌"
+      );
+    }
   }
 
   lines.push("", "Goat & Cheese");

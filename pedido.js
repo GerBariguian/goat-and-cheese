@@ -39,9 +39,16 @@ async function loadOrder() {
         Pedido #${data.id}
       </div>
 
-      <div class="order-progress">
+     <div class="order-progress">
 
-  <div class="progress-step">
+  <div class="progress-step ${
+    data.status === "Recibido" ||
+    data.status === "En preparación" ||
+    data.status === "Listo" ||
+    data.status === "Entregado"
+      ? "active"
+      : ""
+  }">
     <div class="progress-circle ${
       data.status === "Recibido" ||
       data.status === "En preparación" ||
@@ -50,13 +57,18 @@ async function loadOrder() {
         ? "circle-active-yellow"
         : "circle-inactive"
     }"></div>
-
     <span>Recibido</span>
   </div>
 
   <div class="progress-line"></div>
 
-  <div class="progress-step">
+  <div class="progress-step ${
+    data.status === "En preparación" ||
+    data.status === "Listo" ||
+    data.status === "Entregado"
+      ? "active"
+      : ""
+  }">
     <div class="progress-circle ${
       data.status === "En preparación" ||
       data.status === "Listo" ||
@@ -64,32 +76,38 @@ async function loadOrder() {
         ? "circle-active-orange"
         : "circle-inactive"
     }"></div>
-
     <span>Preparando</span>
   </div>
 
   <div class="progress-line"></div>
 
-  <div class="progress-step">
+  <div class="progress-step ${
+    data.status === "Listo" ||
+    data.status === "Entregado"
+      ? "active"
+      : ""
+  }">
     <div class="progress-circle ${
       data.status === "Listo" ||
       data.status === "Entregado"
         ? "circle-active-green"
         : "circle-inactive"
     }"></div>
-
     <span>Listo</span>
   </div>
 
   <div class="progress-line"></div>
 
-  <div class="progress-step">
+  <div class="progress-step ${
+    data.status === "Entregado"
+      ? "active"
+      : ""
+  }">
     <div class="progress-circle ${
       data.status === "Entregado"
         ? "circle-active-gray"
         : "circle-inactive"
     }"></div>
-
     <span>Entregado</span>
   </div>
 

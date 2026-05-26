@@ -109,8 +109,19 @@
         <input 
           type="text"
           id="customer-address"
-          placeholder="Solo si es envío"
+          placeholder="Ej: Av. Rivadavia 1234, Boedo"
         />
+
+       <div class="delivery-zone-card">
+          <p>
+            Envío disponible dentro de la zona delimitada.
+          </p>
+
+          <img 
+            src="assets/zona-envio.png" 
+            alt="Zona de envío Goat & Cheese"
+          />
+       </div>
 
       </div>
 
@@ -127,7 +138,7 @@
         Generar pedido
       </button>
 
-      <div class="order-ticket" id="order-ticket">
+      <div class="order-ticket empty-order-ticket" id="order-ticket">
   	Tu pedido aparecerá acá una vez confirmado.
       </div>
 

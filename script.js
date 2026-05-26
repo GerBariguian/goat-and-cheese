@@ -52,7 +52,8 @@ const products = [
   }
 ];
 
-const cart = [];
+const cart =
+  JSON.parse(localStorage.getItem("goatCart")) || [];
 
 const productsContainer = document.getElementById("products-container");
 const cartContainer = document.getElementById("cart-container");
@@ -181,12 +182,14 @@ function addToCart(name, type, price) {
   }
 
   renderCart();
+  saveCart();
   showToast("✅ Producto agregado");
 }
 
 function removeFromCart(index) {
   cart.splice(index, 1);
   renderCart();
+  saveCart();
 }
 
 
@@ -206,6 +209,7 @@ function showToast(message) {
 function increaseQuantity(index) {
   cart[index].quantity += 1;
   renderCart();
+  saveCart();
 }
 
 function decreaseQuantity(index) {
@@ -216,8 +220,16 @@ function decreaseQuantity(index) {
   }
 
   renderCart();
+  saveCart();
 }
 
+
+function saveCart() {
+  localStorage.setItem(
+    "goatCart",
+    JSON.stringify(cart)
+  );
+}
 
 function renderCart() {
   cartContainer.innerHTML = "";
@@ -234,7 +246,9 @@ function renderCart() {
     `;
 
     totalPriceElement.textContent = "0";
-    stickyCart.style.display = "flex";
+    stickyCount.textContent = "0 productos";
+    stickyTotal.textContent = "$0";
+    stickyCart.style.display = "none";
     return;
   }
 
@@ -411,7 +425,6 @@ function generateOrder() {
 
 }
 
-  const orderNumber = Math.floor(1000 + Math.random() * 9000);
 
   let subtotal = 0;
   let orderDetail = "";
@@ -431,7 +444,7 @@ function generateOrder() {
     : "15-20 min";
 
   let message =
-`✅ Pedido #${orderNumber} confirmado
+`✅ Pedido confirmado
 
 Estado: Pendiente de confirmación del local
 
@@ -461,7 +474,7 @@ El local se comunicará para confirmar el pedido y el estado de la compra.`;
 
   const ticketHTML = `
   <div class="ticket-title">
-    Pedido #${orderNumber} ✅
+    Pedido confirmado ✅
   </div>
 
   <div class="ticket-status">
@@ -518,16 +531,6 @@ El local se comunicará para confirmar el pedido y el estado de la compra.`;
     .getElementById("success-section")
     .scrollIntoView({ behavior: "smooth" });
 
-  const whatsappMessage = encodeURIComponent(message);
-
-  const whatsappNumber = "5491140278163";
-
-  const whatsappURL =
-    `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
-
-  document
-    .getElementById("whatsapp-button")
-    .href = whatsappURL;
 
 supabaseClient
   .from("orders")
@@ -565,11 +568,13 @@ supabaseClient
     const trackingLink =
       `pedido.html?id=${data.id}`;
 
-    document.getElementById("tracking-link").href =
-      trackingLink;
+    const trackingButton =
+      document.getElementById("tracking-link");
 
-    document.getElementById("tracking-link").style.display =
-      "block";
+    if (trackingButton) {
+      trackingButton.href = trackingLink;
+      trackingButton.style.display = "block";
+}
 
   });
 
@@ -641,5 +646,6 @@ deliveryTypeSelect.addEventListener(
 
 toggleAddressField();
 
-checkStoreStatus();
 renderProducts();
+renderCart();
+checkStoreStatus();

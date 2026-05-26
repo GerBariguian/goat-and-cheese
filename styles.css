@@ -422,11 +422,7 @@ button:disabled {
   border: none;
 }
 
-.order-ticket {
-  max-width: 390px !important;
-  padding: 18px !important;
-  margin: 0 auto !important;
-}
+
 
 .ticket-title {
   font-size: 22px;
@@ -896,9 +892,9 @@ button:active,
 }
 
 .order-ticket {
-  max-width: 390px !important;
-  padding: 18px !important;
-  margin: 0 auto !important;
+  max-width: 390px;
+  padding: 18px;
+  margin: 0 auto;
 }
 
 .order-progress {
@@ -955,4 +951,46 @@ button:active,
 
 .circle-inactive {
   background-color: #333 !important;
+}
+
+.progress-step span {
+  color: #777;
+}
+
+.progress-step.active span {
+  color: #fff;
+  font-weight: 800;
+}
+
+.progress-step.active {
+  opacity: 1;
+}
+
+.progress-step:not(.active) {
+  opacity: 0.45;
+}
+
+.empty-order-ticket {
+  text-align: center;
+}
+
+.delivery-zone-card {
+  margin-top: 12px;
+  background-color: #202020;
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.delivery-zone-card p {
+  font-size: 13px;
+  color: #cfcfcf;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.delivery-zone-card img {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
 }
