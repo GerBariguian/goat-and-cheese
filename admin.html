@@ -50,6 +50,38 @@
           <button onclick="setFilter('Entregado')">Entregado</button>
         </div>
 
+        <div class="store-controls">
+
+          <h3>Estado del local</h3>
+
+          <div class="store-current-status" id="store-current-status">
+            Consultando estado...
+          </div>
+
+          <button id="sold-out-button">
+            🔴 Activar sin stock
+          </button>
+
+          <button id="open-store-button">
+            🟢 Volver a vender
+          </button>
+
+          <hr class="admin-divider">
+
+          <button id="auto-store-button">
+            ⏱️ Usar horario automático
+          </button>
+
+          <button id="force-open-button">
+            🟢 Forzar abierto
+          </button>
+
+          <button id="force-closed-button">
+            🔴 Forzar cerrado
+          </button>
+
+        </div>
+
         <div id="orders-container">
           <p>Cargando pedidos...</p>
         </div>

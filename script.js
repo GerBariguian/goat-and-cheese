@@ -11,7 +11,7 @@ const supabaseClient =
   );
 
 
-const testMode = true;
+const testMode = false;
 
 const products = [
   {
@@ -595,7 +595,38 @@ function toggleAddressField() {
 
 }
 
-function checkStoreStatus() {
+
+async function checkSoldOutStatus() {
+  const { data, error } = await supabaseClient
+    .from("store_settings")
+    .select("*")
+    .eq("id", 1)
+    .single();
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  const soldOutWarning =
+    document.getElementById("sold-out-warning");
+
+  const orderSection =
+    document.querySelector(".order-section");
+
+  if (data.is_sold_out) {
+    soldOutWarning.textContent =
+      data.message || "Hoy nos quedamos sin stock. Volvemos pronto.";
+
+    soldOutWarning.style.display = "block";
+    orderSection.classList.add("disabled");
+  } else {
+    soldOutWarning.style.display = "none";
+    orderSection.classList.remove("disabled");
+  }
+}
+
+async function checkStoreStatus() {
   const now = new Date();
 
   const day = now.getDay();
@@ -606,24 +637,47 @@ function checkStoreStatus() {
 
   const isOpenHour = hour >= 20 && hour < 23;
 
-  const isOpen = testMode || ((isFriday || isSaturday) && isOpenHour);
+  let isOpen = testMode || ((isFriday || isSaturday) && isOpenHour);
+
+  const { data, error } = await supabaseClient
+    .from("store_settings")
+    .select("store_mode")
+    .eq("id", 1)
+    .single();
+
+  if (!error && data) {
+    if (data.store_mode === "open") {
+      isOpen = true;
+    }
+
+    if (data.store_mode === "closed") {
+      isOpen = false;
+    }
+  }
 
   const statusElement = document.getElementById("store-status");
   const warningElement = document.getElementById("closed-warning");
   const orderSection = document.querySelector(".order-section");
 
   if (isOpen) {
+    statusElement.textContent =
+      data?.store_mode === "open"
+        ? "🟢 Abierto ahora - Tomando pedidos"
+        : testMode
+          ? "🧪 Modo prueba activo - Pedidos habilitados"
+          : "🟢 Abierto ahora - Tomando pedidos";
 
-    statusElement.textContent = testMode
-      ? "🧪 Modo prueba activo - Pedidos habilitados"
-      : "🟢 Abierto ahora - Tomando pedidos";
     statusElement.classList.add("open");
     statusElement.classList.remove("closed");
 
     warningElement.style.display = "none";
     orderSection.classList.remove("disabled");
   } else {
-    statusElement.textContent = "🔴 Cerrado ahora - Viernes y sábados de 20 a 23 hs";
+    statusElement.textContent =
+      data?.store_mode === "closed"
+        ? "🔴 Local cerrado"
+        : "🔴 Cerrado ahora - Viernes y sábados de 20 a 23 hs";
+
     statusElement.classList.add("closed");
     statusElement.classList.remove("open");
 
@@ -649,3 +703,4 @@ toggleAddressField();
 renderProducts();
 renderCart();
 checkStoreStatus();
+checkSoldOutStatus();

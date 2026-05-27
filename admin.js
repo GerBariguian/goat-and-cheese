@@ -35,6 +35,57 @@ const logoutButton =
 const adminToast =
   document.getElementById("admin-toast");
 
+const soldOutButton =
+  document.getElementById("sold-out-button");
+
+const openStoreButton =
+  document.getElementById("open-store-button");
+
+const autoStoreButton =
+  document.getElementById("auto-store-button");
+
+const forceOpenButton =
+  document.getElementById("force-open-button");
+
+const forceClosedButton =
+  document.getElementById("force-closed-button");
+
+const storeCurrentStatus =
+  document.getElementById("store-current-status");
+
+async function loadStoreStatus() {
+  const { data, error } = await supabaseClient
+    .from("store_settings")
+    .select("*")
+    .eq("id", 1)
+    .single();
+
+  if (error) {
+    console.error(error);
+    storeCurrentStatus.textContent =
+      "No se pudo cargar el estado";
+    return;
+  }
+
+  if (data.is_sold_out) {
+    storeCurrentStatus.textContent =
+      "🔴 Sin stock activo";
+    return;
+  }
+
+  if (data.store_mode === "open") {
+    storeCurrentStatus.textContent =
+      "🟢 Abierto manualmente";
+  } else if (data.store_mode === "closed") {
+    storeCurrentStatus.textContent =
+      "🔴 Cerrado manualmente";
+  } else {
+    storeCurrentStatus.textContent =
+      "⏱️ Horario automático";
+  }
+}
+
+
 function showAdminToast(message) {
   adminToast.textContent = message;
   adminToast.classList.add("show");
@@ -43,6 +94,8 @@ function showAdminToast(message) {
     adminToast.classList.remove("show");
   }, 2500);
 }
+
+loadStoreStatus();
 
 function getStatusClass(status) {
   if (status === "Recibido") {
@@ -267,8 +320,54 @@ function sendWhatsappToCustomer(
   window.open(whatsappUrl, "_blank");
 }
 
+
+async function updateStoreStockStatus(isSoldOut) {
+
+  const { error } = await supabaseClient
+    .from("store_settings")
+    .update({
+      is_sold_out: isSoldOut
+    })
+    .eq("id", 1);
+
+  if (error) {
+    console.error(error);
+    alert("Error actualizando el estado del local.");
+    return;
+  }
+
+  showAdminToast(
+    isSoldOut
+      ? "🔴 Local marcado sin stock"
+      : "🟢 Local habilitado para vender"
+  );
+
+  loadStoreStatus();
+}
+
+
+async function updateStoreMode(mode) {
+  const { error } = await supabaseClient
+    .from("store_settings")
+    .update({
+      store_mode: mode
+    })
+    .eq("id", 1);
+
+  if (error) {
+    console.error(error);
+    alert("Error actualizando modo del local.");
+    return;
+  }
+
+  showAdminToast("Estado del local actualizado");
+
+  loadStoreStatus();
+}
+
 function startAdminPanel() {
   loadOrders();
+  loadStoreStatus();
 
   supabaseClient
     .channel("orders-changes")
@@ -291,7 +390,46 @@ function startAdminPanel() {
       }
     )
     .subscribe();
+
+  supabaseClient
+  .channel("store-settings-changes")
+  .on(
+    "postgres_changes",
+    {
+      event: "*",
+      schema: "public",
+      table: "store_settings"
+    },
+    () => {
+      loadStoreStatus();
+    }
+  )
+  .subscribe();  
+    
 }
+
+
+soldOutButton.addEventListener("click", () => {
+  updateStoreStockStatus(true);
+});
+
+openStoreButton.addEventListener("click", () => {
+  updateStoreStockStatus(false);
+});
+
+
+autoStoreButton.addEventListener("click", () => {
+  updateStoreMode("auto");
+});
+
+forceOpenButton.addEventListener("click", () => {
+  updateStoreMode("open");
+});
+
+forceClosedButton.addEventListener("click", () => {
+  updateStoreMode("closed");
+});
+
 
 function loginAdmin() {
   localStorage.setItem("adminLoggedIn", "true");
