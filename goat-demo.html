@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Goat & Cheese</title>
+
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+
+  <meta 
+    name="description" 
+    content="Menú online de Goat & Cheese. Smash burgers artesanales en Boedo, CABA." 
+  />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+ <div class="page-wrapper">
+
+  <header class="hero">
+
+  <div class="overlay"></div>
+
+  <img src="assets/logo.png" alt="Logo Goat & Cheese" class="logo" />
+
+  <div class="hero-content">
+    <h1>Goat & Cheese</h1>
+
+    <p class="subtitle">
+      Smash burgers artesanales en Boedo 🍔
+    </p>
+
+    <div class="status" id="store-status">
+      Consultando estado...
+    </div>
+
+    <a href="#menu" class="main-button">
+      Ver menú
+    </a>
+  </div>
+
+  </header>
+
+  <main>
+    <section class="info-card">
+      <section class="sold-out-warning" id="sold-out-warning">
+        🍔 Gracias por visitarnos. Hoy nos quedamos sin stock.
+      </section>
+      <h2>📍 Retiro o envío</h2>
+      
+      <p>
+        Retiro por <strong>Tarija 4002, Boedo, CABA</strong>.
+      </p>
+      
+      <p>
+        Envío dentro de zona: <strong>$2.000</strong>
+      </p>
+      
+      <a 
+        href="https://www.google.com/maps/search/?api=1&query=Tarija%204002%2C%20Boedo%2C%20CABA"
+        target="_blank"
+        class="maps-button"
+      >
+        Cómo llegar
+      </a>
+    </section>
+
+    <section id="menu" class="menu-section">
+      <h2>Menú</h2>
+      <div id="products-container"></div>
+    </section>
+
+    <section class="cart-section" id="cart-section">
+      <h2>Tu pedido</h2>
+      <div id="cart-container">
+        <p class="empty-cart">Todavía no agregaste productos.</p>
+      </div>
+
+      <div class="total">
+        Total: $<span id="total-price">0</span>
+      </div>
+    </section>
+
+    <section class="closed-warning" id="closed-warning">
+      🔴 En este momento estamos cerrados. Podés ver el menú y armar tu pedido, pero solo se puede confirmar viernes y sábados de 20 a 23 hs.
+    </section>
+
+    <section class="order-section">
+      <h2>Datos del pedido</h2>
+
+      <p class="checkout-helper">
+        Completá tus datos para generar el pedido y enviarlo al local.
+      </p>
+
+      <label>Nombre</label>
+      <input type="text" id="customer-name" placeholder="Ej: Germán" />
+
+      <label>Teléfono</label>
+      <input type="tel" id="customer-phone" placeholder="Ej: 11 1234-5678" />
+
+      <label>Modalidad</label>
+      <select id="delivery-type">
+        <option value="Retiro por local">Retiro por local</option>
+        <option value="Envío a domicilio">Envío a domicilio</option>
+      </select>
+
+      <div id="address-group">
+
+        <label>Dirección</label>
+
+        <input 
+          type="text"
+          id="customer-address"
+          placeholder="Ej: Av. Rivadavia 1234, Boedo"
+        />
+
+       <div class="delivery-zone-card">
+          <p>
+            Envío disponible dentro de la zona delimitada.
+          </p>
+
+          <img 
+            src="assets/zona-envio.png" 
+            alt="Zona de envío Goat & Cheese"
+          />
+       </div>
+
+      </div>
+
+      <label>Medio de pago</label>
+      <select id="payment-method">
+        <option value="Efectivo">Efectivo</option>
+        <option value="Transferencia">Transferencia</option>
+      </select>
+
+      <label>Comentarios</label>
+      <textarea id="comments" placeholder="Ej: sin cebolla, con extra cheddar..."></textarea>
+
+      <button id="generate-order" class="main-button">
+        Generar pedido
+      </button>
+
+      <div class="order-ticket empty-order-ticket" id="order-ticket">
+  	Tu pedido aparecerá acá una vez confirmado.
+      </div>
+
+      <textarea id="order-message" readonly hidden></textarea>
+
+    </section>
+
+    <section class="success-section" id="success-section">
+      <div class="success-icon">✅</div>
+      <h2>Pedido confirmado</h2>
+      <p>
+        Tu pedido fue generado correctamente.
+        En breve Goat & Cheese se comunicará para confirmar el estado de la compra.
+      </p>
+
+      <a href="#order-ticket" class="main-button">
+        Ver resumen del pedido
+      </a>
+      <a 
+        href="#"
+        id="tracking-link"
+        class="main-button"
+        style="display: none;"
+      >
+        Ver estado de mi pedido
+      </a>
+    </section>
+
+    </main>
+
+    <div class="sticky-cart" id="sticky-cart">
+      <div>
+        <strong id="sticky-count">0 productos</strong>
+        <span id="sticky-total">$0</span>
+      </div>
+
+      <button id="go-to-cart">Ver pedido</button>
+    </div>
+
+    <footer>
+    <p>Goat & Cheese · Smash burgers en Boedo</p>
+    <p class="footer-small">Viernes y sábados de 20 a 23 hs</p>
+    </footer>
+
+ </div>
+ <div class="toast" id="toast">
+   ✅ Producto agregado al pedido
+ </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

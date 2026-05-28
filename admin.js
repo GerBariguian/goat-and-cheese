@@ -4,7 +4,7 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
   "sb_publishable_fBBxDtAePY7hkZWBDD_8gg_YOsR7ihh";
 
-const ADMIN_PIN = "1234";
+const ADMIN_PIN = "qwerty";
 
 let currentFilter = "Todos";
 
