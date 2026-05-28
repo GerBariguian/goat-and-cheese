@@ -477,9 +477,6 @@ El local se comunicará para confirmar el pedido y el estado de la compra.`;
     Pedido confirmado ✅
   </div>
 
-  <div class="ticket-status">
-    Pendiente de confirmación
-  </div>
 
   <div class="ticket-divider"></div>
 
@@ -704,3 +701,19 @@ renderProducts();
 renderCart();
 checkStoreStatus();
 checkSoldOutStatus();
+
+supabaseClient
+  .channel("store-settings-index-changes")
+  .on(
+    "postgres_changes",
+    {
+      event: "*",
+      schema: "public",
+      table: "store_settings"
+    },
+    () => {
+      checkStoreStatus();
+      checkSoldOutStatus();
+    }
+  )
+  .subscribe();
