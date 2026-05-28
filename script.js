@@ -385,7 +385,8 @@ function generateOrder() {
     "caballito",
     "parque chacabuco",
     "almagro",
-    "flores"
+    "flores",
+    "san cristobal"
 ];
   const paymentMethod = document.getElementById("payment-method").value;
   const comments = document.getElementById("comments").value;
